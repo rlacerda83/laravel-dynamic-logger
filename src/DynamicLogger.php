@@ -5,8 +5,9 @@ namespace DynamicLogger;
 use Monolog\Logger;
 use Symfony\Component\Console\Command\Command;
 use Log;
+use Psr\Log\LoggerInterface;
 
-class DynamicLogger
+class DynamicLogger implements LoggerInterface
 {
     /**
      * @var Logger
@@ -130,6 +131,163 @@ class DynamicLogger
                 $message,
                 $params
             )
+        );
+    }
+
+    /**
+     * System is unusable.
+     *
+     * @param string $message
+     * @param array $params
+     * @param array $context
+     * @return null
+     */
+    public function emergency($message, array $params = array(), array $context = array())
+    {
+        $logMessage = $this->createMessage($message, $params);
+        $this->logger->emergency($logMessage, $context);
+    }
+
+    /**
+     * Action must be taken immediately.
+     *
+     * Example: Entire website down, database unavailable, etc. This should
+     * trigger the SMS alerts and wake you up.
+     *
+     * @param string $message
+     * @param array $params
+     * @param array $context
+     * @return null
+     */
+    public function alert($message, array $params = array(), array $context = array())
+    {
+        $logMessage = $this->createMessage($message, $params);
+        $this->logger->alert($logMessage, $context);
+    }
+
+    /**
+     * Critical conditions.
+     *
+     * Example: Application component unavailable, unexpected exception.
+     *
+     * @param string $message
+     * @param array $params
+     * @param array $context
+     * @return null
+     */
+    public function critical($message, array $params = array(), array $context = array())
+    {
+        $logMessage = $this->createMessage($message, $params);
+        $this->logger->critical($logMessage, $context);
+    }
+
+    /**
+     * Runtime errors that do not require immediate action but should typically
+     * be logged and monitored.
+     *
+     * @param string $message
+     * @param array $params
+     * @param array $context
+     * @return null
+     */
+    public function error($message, array $params = array(), array $context = array())
+    {
+        $logMessage = $this->createMessage($message, $params);
+        $this->logger->error($logMessage, $context);
+    }
+
+    /**
+     * Exceptional occurrences that are not errors.
+     *
+     * Example: Use of deprecated APIs, poor use of an API, undesirable things
+     * that are not necessarily wrong.
+     *
+     * @param string $message
+     * @param array $params
+     * @param array $context
+     * @return null
+     */
+    public function warning($message, array $params = array(), array $context = array())
+    {
+        $logMessage = $this->createMessage($message, $params);
+        $this->logger->warning($logMessage, $context);
+    }
+
+    /**
+     * Normal but significant events.
+     *
+     * @param string $message
+     * @param array $params
+     * @param array $context
+     * @return null
+     */
+    public function notice($message, array $params = array(), array $context = array())
+    {
+        $logMessage = $this->createMessage($message, $params);
+        $this->logger->notice($logMessage, $context);
+    }
+
+    /**
+     * Interesting events.
+     *
+     * Example: User logs in, SQL logs.
+     *
+     * @param string $message
+     * @param array $params
+     * @param array $context
+     * @return null
+     */
+    public function info($message, array $params = array(), array $context = array())
+    {
+        $logMessage = $this->createMessage($message, $params);
+        $this->logger->info($logMessage, $context);
+    }
+
+    /**
+     * Detailed debug information.
+     *
+     * @param string $message
+     * @param array $params
+     * @param array $context
+     * @return null
+     */
+    public function debug($message, array $params = array(), array $context = array())
+    {
+        $logMessage = $this->createMessage($message, $params);
+        $this->logger->debug($logMessage, $context);
+    }
+
+    /**
+     * Logs with an arbitrary level.
+     *
+     * @param mixed $level
+     * @param string $message
+     * @param array $params
+     * @param array $context
+     * @return null
+     */
+    public function log($level, $message, array $params = array(), array $context = array())
+    {
+        $logMessage = $this->createMessage($message, $params);
+        $this->logger->log($level, $logMessage, $context);
+    }
+
+    /**
+     * Generate message
+     *
+     * @param $message
+     * @param array $params
+     * @return string
+     */
+    protected function createMessage($message, array $params = array())
+    {
+        if (!count($params)) {
+            return $message;
+        }
+
+        return vsprintf(
+            $message,
+            $params
         );
     }
 }
