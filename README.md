@@ -53,6 +53,9 @@ $handlers[] = new StreamHandler($file);
 \DynamicLogger::setHandlers($handlers, true, $cliLogger);
 //From that moment, the log will only be used with informed handlers
 
+//to revert the log for default laravel settings use:
+\DynamicLogger::revert();
+
 // you can use Log::info() or you can use DynamicLogger::info()
 /**
  * All log methods in DynamicLogger accept this params
