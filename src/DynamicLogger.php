@@ -43,12 +43,12 @@ class DynamicLogger implements LoggerInterface
      * @param bool $logOnlyThisHandlers
      * @param bool $cliLogger
      */
-    public function changeLog(
+    public function setHandlers(
         array $handlers,
         $logOnlyThisHandlers = false,
         $cliLogger = false
     ) {
-        $this->setHandlers($handlers, $logOnlyThisHandlers);
+        $this->setupHandlers($handlers, $logOnlyThisHandlers);
         $this->cliLogger = $cliLogger;
     }
 
@@ -65,7 +65,7 @@ class DynamicLogger implements LoggerInterface
      * @param $logOnlyThisHandler
      * @return bool
      */
-    protected function setHandlers(
+    protected function setupHandlers(
         $handlers,
         $logOnlyThisHandler
     ) {
