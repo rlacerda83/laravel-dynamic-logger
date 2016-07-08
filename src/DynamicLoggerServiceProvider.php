@@ -21,7 +21,7 @@ class DynamicLoggerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('html', function ($app) {
+        $this->app->singleton('dynamic.logger', function ($app) {
             return new DynamicLogger();
         });
 
@@ -35,6 +35,6 @@ class DynamicLoggerServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['dynamic.logger'];
+        return ['DynamicLogger\DynamicLogger'];
     }
 }

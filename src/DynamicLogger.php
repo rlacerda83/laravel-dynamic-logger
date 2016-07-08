@@ -2,9 +2,7 @@
 
 namespace DynamicLogger;
 
-use Monolog\Handler\NullHandler;
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use Symfony\Component\Console\Command\Command;
 use Log;
 
@@ -26,50 +24,58 @@ class DynamicLogger
     protected $fileLoggerActive;
 
     /**
-     * @param $path
-     * @param bool $logOnlyThisHandler
-     * @param bool $fileLoggerActive
-     * @param null $cliLogger
+     * @var array
      */
-    public function changeLog(
-        $path,
-        $logOnlyThisHandler = false,
-        $fileLoggerActive = true,
-        $cliLogger = null
-    ) {
-        $logger = Log::getMonolog();
-        $this->setHandlers($logger, $path, $logOnlyThisHandler, $fileLoggerActive);
+    protected $handlers;
 
-        $this->logger = $logger;
-        $this->cliLogger = $cliLogger;
-        $this->fileLoggerActive = $fileLoggerActive;
+    /**
+     * DynamicLogger constructor.
+     */
+    public function __construct()
+    {
+        $this->logger = Log::getMonolog();
+        $this->handlers = $this->logger->getHandlers();
     }
 
     /**
-     * @param Logger $logger
-     * @param $path
+     * @param array $handlers
+     * @param bool $logOnlyThisHandlers
+     * @param bool $cliLogger
+     */
+    public function changeLog(
+        array $handlers,
+        $logOnlyThisHandlers = false,
+        $cliLogger = false
+    ) {
+        $this->setHandlers($handlers, $logOnlyThisHandlers);
+        $this->cliLogger = $cliLogger;
+    }
+
+    /**
+     *
+     */
+    public function revert()
+    {
+        $this->logger->setHandlers($this->handlers);
+    }
+
+    /**
+     * @param $handlers
      * @param $logOnlyThisHandler
-     * @param bool $fileLoggerActive
      * @return bool
      */
     protected function setHandlers(
-        Logger $logger,
-        $path,
-        $logOnlyThisHandler,
-        $fileLoggerActive = true
+        $handlers,
+        $logOnlyThisHandler
     ) {
-        if (!$fileLoggerActive) {
-            $logger->setHandlers([new NullHandler()]);
-            return true;
-        }
-
-        $streamHandler = new StreamHandler($path);
         if ($logOnlyThisHandler) {
-            $logger->setHandlers([$streamHandler]);
+            $this->logger->setHandlers($handlers);
             return true;
         }
 
-        $logger->pushHandler($streamHandler);
+        foreach ($handlers as $handler) {
+            $this->logger->pushHandler($handler);
+        }
     }
 
     /**
