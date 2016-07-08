@@ -5,7 +5,8 @@ namespace DynamicLogger\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Collective\Html\HtmlBuilder
+ * Class DynamicLogger
+ * @package DynamicLogger\Facades
  */
 class DynamicLogger extends Facade
 {
@@ -17,6 +18,6 @@ class DynamicLogger extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'DynamicLogger';
+        return 'dynamic.logger';
     }
 }
